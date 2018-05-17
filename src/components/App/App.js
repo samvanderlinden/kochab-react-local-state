@@ -6,10 +6,17 @@ class App extends Component {
     super(props);
 
     this.state = {
-      user: {
-        name: 'Sam',
-        city: 'Fergus Falls',
-        zip: 56537
+      user: [
+        {
+          name: '', 
+          city: '', 
+          zip: '',
+        },
+      ],
+      newUser: {
+        name: '',
+        city: '',
+        zip: '',
       }
     }
 
@@ -18,57 +25,47 @@ class App extends Component {
     // this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = (event) => {
-    // console.log('input was changed');
-    // console.log('event.target', event.target);
-    console.log('event.target.value', event.target.value);
-    // this.state.user = event.target.value;
 
+  handleChangeFor = propertyName => event => {
+    console.log('event.target.value', event.target.value);
     this.setState({
-      user: {
-        ...this.state.user,
-        name: event.target.value,
+      newUser: {
+        ...this.state.newUser,
+        [propertyName]: event.target.value,
       }
     });
   }
 
-  handleCity = (event) => {
-    console.log('event.target.value', event.target.value);
+
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(this.state);
     this.setState({
-      user: {
-        ...this.state.user,
-        city: event.target.value,
+      user: [...this.state.user, this.state.newUser],
+      newUser: {
+        name: '',
+        city: '',
+        zip: '',
       }
     });
-  }
-
-  handleZip = (event) => {
-    console.log('event.target.value', event.target.value);
-    this.setState({
-      user: {
-        ...this.state.user,
-        zip: event.target.value,
-      }
-    });
-  }
-
-  consoleLog = () => {
-    console.log(this.state.user + ' is from ' + this.state.city);
   }
 
 
   render() {
     return (
       <div>
-        <p>
-        <input onChange={this.handleChange} placeholder="User Name"/>
-        <input onChange={this.handleCity} placeholder="City"/>
-        <input onChange={this.handleZip} placeholder="Zip"/>
-        </p>
-        <p>
-        {this.state.user.name} is from {this.state.user.city}, {this.state.user.zip}
-        </p>
-        <button onClick={this.consoleLog}>Console Log Info</button>
+        <form onSubmit={this.handleSubmit}>
+          <input value={this.state.newUser.name} onChange={this.handleChangeFor('name')} placeholder="User Name" />
+          <input value={this.state.newUser.city} onChange={this.handleChangeFor('city')} placeholder="City" />
+          <input value={this.state.newUser.zip} onChange={this.handleChangeFor('zip')} placeholder="Zip" />
+          <input type="submit" value="Click me to submit form" />
+        </form>
+ 
+        <ul>
+          {this.state.user.map(person => (<li key={person.name}>
+          {person.name} is from {person.city}, {person.zip}</li>))}
+        </ul>
       </div>
     );
   }
